@@ -37,10 +37,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.example.android.uamp.media.audiofocus.AudioFocusExoPlayerDecorator
 import com.example.android.uamp.media.extensions.flag
-import com.example.android.uamp.media.library.BrowseTree
-import com.example.android.uamp.media.library.JsonSource
-import com.example.android.uamp.media.library.MusicSource
-import com.example.android.uamp.media.library.UAMP_BROWSABLE_ROOT
+import com.example.android.uamp.media.library.*
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlayer
@@ -86,6 +83,9 @@ class MusicService : MediaBrowserServiceCompat() {
 
     private val remoteJsonSource: Uri =
             Uri.parse("https://storage.googleapis.com/uamp/catalog.json")
+
+    private val remoteSpreakerSource: Uri =
+            Uri.parse("https://api.spreaker.com/v2/users/8573356/episodes")
 
     private val audioAttributes = AudioAttributesCompat.Builder()
             .setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC)
@@ -139,7 +139,8 @@ class MusicService : MediaBrowserServiceCompat() {
         becomingNoisyReceiver =
                 BecomingNoisyReceiver(context = this, sessionToken = mediaSession.sessionToken)
 
-        mediaSource = JsonSource(context = this, source = remoteJsonSource)
+        //mediaSource = JsonSource(context = this, source = remoteJsonSource)
+        mediaSource = SpreakerSource(context = this, source = remoteSpreakerSource)
 
         // ExoPlayer will manage the MediaSession for us.
         mediaSessionConnector = MediaSessionConnector(mediaSession).also {
